@@ -1,7 +1,7 @@
 ## To use this repository:  
 1. Click on R project `discharge_quantile`.  
-2. Navigate in R Studio to display_quantile_app -> app.   
-3. Run the app.   
+2. Navigate in R Studio to display_quantile_app -> `app`.   
+3. Run the `app`.   
 Tip: Before the Shiny App runs, the script will gather the river discharge data, and save it in display_quantile_app -> data.  
   
   ### Folder Defition:  
