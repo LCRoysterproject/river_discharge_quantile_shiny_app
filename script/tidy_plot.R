@@ -4,7 +4,7 @@ library(lubridate)
 library(waterData)
 
 #station to analyze
-station = '02323500'   
+station = '02358000'   
 #get site name to use in plot titles and such
 stinfo  = siteInfo(station)
 
@@ -35,11 +35,11 @@ dis_noleap <- dis %>%
 dis_quant <- dis_noleap %>%
   mutate(md = strftime(dates, format = "%m-%d")) %>%
   group_by(md) %>%
-  summarise(quan0 = quantile(val, 0),
-            quan25 = quantile(val, 0.25),
-            quan50 = quantile(val, 0.50),
-            quan75 = quantile(val, 0.75),
-            quan100 = quantile(val, 1)) %>%
+  summarise(quan0 = quantile(val, 0, na.rm=TRUE),
+            quan25 = quantile(val, 0.25, na.rm=TRUE),
+            quan50 = quantile(val, 0.50, na.rm=TRUE),
+            quan75 = quantile(val, 0.75, na.rm=TRUE),
+            quan100 = quantile(val, 1, na.rm=TRUE)) %>%
   gather("quantile", "val", -md)
 
 # Remove the "quan" and set the quantile column to factor of 5 levels
@@ -50,7 +50,7 @@ dis_quant$quantile <- str_remove(dis_quant$quantile, "quan") %>%
   factor(levels = c("100", "75", "50", "25", "0"))
 
 # Year of interest, keep this at the current year
-yoi = 2018
+yoi = 2019
 
 # Add year to dis_quant's date for plotting purpose
 dis_quant1 <- dis_quant %>%
@@ -66,19 +66,19 @@ library(scales)
 
 cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2")
 
-quant2018<-ggplot(dis_yoi, aes(x=dates, y=val)) +
+quant2019<-ggplot(dis_yoi, aes(x=dates, y=val)) +
   xlab("Month")+
   ylab("River Discharge (ft^3)") +
-  labs(title= "2018",fill= "Quantile") +
+  labs(title= "2019",fill= "Quantile") +
   geom_ribbon(data = dis_quant1, aes(x=dates, ymax=val, ymin=0, fill=quantile)) +
   geom_line(size=1.1) +
-  geom_text()
+  #geom_text()+
     scale_fill_manual(values=cbPalette) +
   scale_x_date(labels = date_format("%b"))+
     theme_minimal() +
     theme(panel.border = element_rect(colour = "black", fill=NA, size=1))
 
 require(cowplot)
-quantile_plot<-plot_grid(quant2013,quant2014, quant2015, quant2016, quant2017, quant2018, ncol=2, labels=c("a","b","c","d","e","f")) 
+quantile_plot<-plot_grid(quant2005, quant2006,quant2007,quant2008,quant2009,quant2010,quant2011,quant2012,quant2013,quant2014,quant2015,quant2016,quant2017,quant2018,quant2019, ncol=5, labels=c("a","b","c","d","e","f","g", "h","i","j", "k", "l", "m", "n", "o")) 
 
-ggsave("quantile2018_2018.png", width= 10, height=10, dpi=300)
+ggsave("fig/quantile_plot.png", width= 20, height=10, dpi=300)
