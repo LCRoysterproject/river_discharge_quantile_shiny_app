@@ -81,4 +81,5 @@ quant2019<-ggplot(dis_yoi, aes(x=dates, y=val)) +
 require(cowplot)
 quantile_plot<-plot_grid(quant2005, quant2006,quant2007,quant2008,quant2009,quant2010,quant2011,quant2012,quant2013,quant2014,quant2015,quant2016,quant2017,quant2018,quant2019, ncol=5, labels=c("a","b","c","d","e","f","g", "h","i","j", "k", "l", "m", "n", "o")) 
 
-ggsave("fig/quantile_plot.png", width= 20, height=10, dpi=300)
+
+ggsave("fig/quantile_plot.tiff", width= 20, height=10, dpi=300)
