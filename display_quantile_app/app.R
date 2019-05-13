@@ -1,4 +1,4 @@
-library("tidyverse").
+library("tidyverse")
 library("lubridate")
 library("waterData")
 library("shiny")
