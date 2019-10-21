@@ -5,8 +5,8 @@ account: oysterprojectck
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 396640
-bundleId: 2481087
+bundleId: 2521647
 url: https://oysterprojectck.shinyapps.io/river_quantile/
-when: 1570559217.42821
+when: 1571674372.52817
 asMultiple: FALSE
 asStatic: FALSE
