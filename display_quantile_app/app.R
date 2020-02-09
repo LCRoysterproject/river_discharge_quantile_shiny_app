@@ -36,6 +36,12 @@ dis_quant <- dis_noleap %>%
 dis_quant$quantile <- str_remove(dis_quant$quantile, "quan") %>%
   factor(levels = c("100", "75", "50", "25", "0"))
 
+minValues <- dis_quant$val[dis_quant$quantile == '0']
+
+dis_quant$min <- minValues
+
+dis_quant1 <- subset(dis_quant, dis_quant$quantile != '0')
+
 #### UI ####
 ui <- fluidPage(
    
@@ -72,6 +78,7 @@ server <- function(input, output) {
      dis_yoi <- dis_noleap %>%
        filter(year(dates) == input$yoi)
      
+     
      cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2")
      
      
@@ -80,9 +87,10 @@ server <- function(input, output) {
        ylab("River Discharge (ft^3)")+
        xlab ("Date") +
        guides(fill=guide_legend(title="Quantiles")) +
-       geom_ribbon(data = dis_quant1, aes(x=dates, ymax=val, ymin=0, fill=quantile)) +
+       geom_ribbon(data = dis_quant1, aes(x=dates, ymax=val, ymin=min, fill=quantile)) +
        geom_line(size=1.2) +
-       scale_fill_manual(values=cbPalette) +
+       scale_fill_manual(values=cbPalette, breaks=c("100", "75", "50", "25"),
+                         labels=c("75-100", "50-75", "25-50", "0-25")) +
        theme_minimal() +
        theme(panel.border = element_rect(colour = "black", fill=NA, size=1))
    })
