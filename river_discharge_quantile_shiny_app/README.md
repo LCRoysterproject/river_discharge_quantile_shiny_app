@@ -1,0 +1,1 @@
+This folder contains the `data` folder and the `rsconnect` folder. 

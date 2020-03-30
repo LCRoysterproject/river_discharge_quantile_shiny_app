@@ -1,0 +1,1 @@
+This folder contains `shinyapps.io` folder. This folder should not be modified or edited. This folder needs to exist so Shiny App publication can be updated into the correct Shiny App account.  
