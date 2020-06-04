@@ -1,1 +1,1 @@
-This folder contains the file `dis1.rds` that is read when the Shiny App runs. Do not delete or modify this file. The Shiny app will update and read in the river discharge information from this file.  
+This folder contains the file `dis1.rds` that is read when the Shiny App runs. Do not delete or modify this file. The Shiny app will update and read in the river discharge information from this file. This data is updated through the R package `waterData`.   
