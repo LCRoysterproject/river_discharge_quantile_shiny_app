@@ -5,8 +5,8 @@ account: oysterprojectck
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 397320
-bundleId: 3469359
+bundleId: 3593260
 url: https://oysterprojectck.shinyapps.io/display_quantile_app/
-when: 1596464438.23967
+when: 1599231212.49835
 asMultiple: FALSE
 asStatic: FALSE
