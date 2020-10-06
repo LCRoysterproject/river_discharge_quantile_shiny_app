@@ -3,6 +3,7 @@ library("lubridate")
 library("waterData")
 library("shiny")
 library("shinythemes")
+library("scales")
 
 # station and site
 station = '02323500'   
