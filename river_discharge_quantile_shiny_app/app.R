@@ -27,15 +27,15 @@ dis_noleap <- dis %>%
 dis_quant <- dis_noleap %>%
   mutate(md = strftime(dates, format = "%m-%d")) %>%
   group_by(md) %>%
-  summarise(quan25 = quantile(val, 0.25, na.rm = TRUE),
-            quan50 = quantile(val, 0.50, na.rm = TRUE),
-            quan75 = quantile(val, 0.75, na.rm = TRUE),
-            quan100 = quantile(val, 1, na.rm = TRUE)) %>%
+  summarise(quan10 = quantile(val, 0.10, na.rm=TRUE),
+            quan25 = quantile(val, 0.25, na.rm=TRUE),
+            quan75 = quantile(val, 0.75, na.rm=TRUE),
+            quan90 = quantile(val, 0.90, na.rm=TRUE),
+            quan100 = quantile(val, 1, na.rm=TRUE)) %>%
   gather("quantile", "val", -md)
 
 dis_quant$quantile <- str_remove(dis_quant$quantile, "quan") %>%
-  factor(levels = c("100", "75", "50", "25"))
-
+  factor(levels = c("100", "90", "75", "25", "10"))
 
 #### UI ####
 ui <- fluidPage(theme = shinytheme("united"), 
@@ -62,7 +62,8 @@ ui <- fluidPage(theme = shinytheme("united"),
     
     mainPanel(
       width = 7,
-      plotOutput("quantPlot", height = "600px")
+      plotOutput("quant_plot", height = "600px"),
+      downloadButton(outputId = "download_quant", label = "Download this figure")
     )
   )
 )
@@ -70,30 +71,52 @@ ui <- fluidPage(theme = shinytheme("united"),
 #### SERVER ####
 server <- function(input, output) {
   
-  output$quantPlot <- renderPlot({
+  quant_plot<- reactive({
+    
     dis_quant1 <- dis_quant %>%
       mutate(dates = paste(input$yoi, md, sep="-") %>% as.Date)
     
     dis_yoi <- dis_noleap %>%
       filter(year(dates) == input$yoi)
     
-    cbPalette <- c("#E69F00", "#009E73", "#F0E442", "#0072B2")
+    cbPalette <- c("mediumpurple3", "darkslategray2", "palegreen2", "sandybrown", "indianred4")
     
+    ref_min<-5000 #this is minimum release from JWLD
     
-    ggplot(dis_yoi, aes(x=dates, y=val)) +
-      ggtitle("Year",input$yoi) +
-      ylab("River Discharge (CFS)")+
-      xlab ("Date") +
-      guides(fill=guide_legend(title="QUANTILES")) +
-      geom_ribbon(data = dis_quant1, aes(x=dates, ymax=val, ymin=0, fill=quantile)) +
+    quant_plot<- ggplot(dis_yoi, aes(x=dates, y=val)) +
+      ggtitle(paste("Suwannee River Discharge Quantiles for",input$yoi)) +
+      xlab("Month")+
+      ylab("River Discharge (ft^3)") +
+      labs(fill= "Quantile") +
+      geom_ribbon(data = dis_quant1, aes(x=dates, ymax=val, ymin=min(val), fill=quantile)) +
       geom_line(size=1.2) +
-      scale_fill_manual(values=cbPalette, labels = c("76-100","51-75","26-50","0-25")) +
-      scale_y_continuous(breaks = c(5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000)) +
+      scale_fill_manual(values=cbPalette, labels = c("90-100", "75-90", "25-75", "10-25", "0-10")) +
+      scale_x_date(labels = date_format("%B")) +
       theme_minimal() +
       theme(panel.border = element_rect(colour = "black", fill=NA, size=1),
             axis.text=element_text(size=14),
-            axis.title=element_text(size=14,face="bold"))
+            axis.title=element_text(size=14,face="bold")) +
+      geom_hline(yintercept = ref_min, color = "black", size=1.5, linetype="dashed")+
+      scale_y_continuous(limits=c(0, 60000))
+    
+    quant_plot
   })
+ 
+   
+  output$quant_plot <-renderPlot({
+    quant_plot()
+    
+  })
+  
+  output$download_quant<- downloadHandler(
+    filename = function() {
+      "plot.jpeg"
+    },
+    content = function(file) {
+      ggsave(file,  quant_plot(), width = 10, height = 10)
+    }
+  )
+  
 }
 
 # Run the application 
