@@ -82,8 +82,7 @@ server <- function(input, output) {
     
     cbPalette <- c("mediumpurple3", "darkslategray2", "palegreen2", "sandybrown", "indianred4")
     
-    ref_min<-5000 #this is minimum release from JWLD
-    
+  
     quant_plot<- ggplot(dis_yoi, aes(x=dates, y=val)) +
       ggtitle(paste("Suwannee River Discharge Quantiles for",input$yoi)) +
       xlab("Month")+
@@ -97,7 +96,6 @@ server <- function(input, output) {
       theme(panel.border = element_rect(colour = "black", fill=NA, size=1),
             axis.text=element_text(size=14),
             axis.title=element_text(size=14,face="bold")) +
-      geom_hline(yintercept = ref_min, color = "black", size=1.5, linetype="dashed")+
       scale_y_continuous(limits=c(0, 60000))
     
     quant_plot
